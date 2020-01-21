@@ -1,16 +1,18 @@
-/* Records samples into samples[2][numSamples]
+/* TESTED WITH FUNCGEN!!
+ *  Records samples into samples[2][numSamples]
  *  shifts samples[0] to left by some amount
  * And sends the recorded waveforms on serial
  * So that the serial plotter can plot them on one graph 
  */
 
-const int shiftValue = 100;
+//number of samples to shift samples[0] to left
+const int shiftValue = 25;
 
 const int micPin1 = A0;
 const int micPin2 = A1;
 
 IntervalTimer samplingTimer;
-const int numSamples = 512;   //total number of samples in waveform
+const int numSamples = 550;   //total number of samples in waveform
 volatile int sampleCounter;   //must be volatile because is used in both main() and ISR
 int samples[2][numSamples]; //stores 2 waveforms
 
@@ -56,7 +58,7 @@ void loop() {
   Serial.print(millis() - beginTime);
   Serial.println("ms.");
   Serial.println("Waiting for 4 seconds");
-  delay(4000);  
+  delay(1500);  
 }
 
 //shifts a waveform array of size wsize

@@ -50,7 +50,7 @@ void loop() {
   Serial.print(millis() - beginTime);
   Serial.println("ms.");
   Serial.println("Waiting for 4 seconds");
-  delay(4000);  
+  delay(1000);  
 }
 
 //record samples into samples[2][numSamples]
