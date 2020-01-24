@@ -73,6 +73,7 @@ void loop() {
   Serial.println("Waiting for num1.5 seconds");
   delay(1500);
 }
+//wow i wrote all this code fuck
 
 float beamformAtDelta(int delta) {
   int sumSize = numSamples - delta;
