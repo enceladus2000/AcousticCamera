@@ -11,7 +11,7 @@ const int numSamples = 1000;   //total number of samples in waveform
 volatile int sampleCounter;   //must be volatile because is used in both main() and ISR
 float samples[numMics][numSamples]; //stores 2 waveforms
 
-const int ANALOG_READ_RESOLUTION = 12;
+const int ANALOG_READ_RESOLUTION = 10;
 const int ANALOG_READ_AVERAGING = 1;
 const int fs = 10000;    //sampling frequency
 
