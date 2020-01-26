@@ -1,6 +1,9 @@
 /* Records samples into samples[2][numSamples]
- * normalises
- * And sends the recorded waveforms on serial
+ * centralises and normalises the waveforms
+ * HOW TO NORMALISE A WAVEFORM? 
+ * 
+ *
+ * And sends the resultant waveforms on serial
  * So that the serial plotter can plot them on one graph 
  */
 
@@ -8,7 +11,7 @@ const int micPins[] = {A0, A1};
 const int numMics = sizeof(micPins)/sizeof(int);
 
 IntervalTimer samplingTimer;
-const int numSamples = 1000;   //total number of samples in waveform
+const int numSamples = 600;   //total number of samples in waveform
 volatile int sampleCounter;   //must be volatile because is used in both main() and ISR
 float samples[numMics][numSamples]; //stores 2 waveforms
 
@@ -42,6 +45,16 @@ void loop() {
   //wait for sampling to complete
   while (sampleCounter < numSamples);     //waiting for sampling to finish
 
+  float p1 = calcPower(samples[0], numSamples);
+  p1 = sqrt(p1);
+  float p2 = calcPower(samples[1], numSamples);
+  p2 = sqrt(p2);
+  
+  for (int m = 0; m < numMics; m++){
+    centerWaveform(samples[m], numSamples);
+    normaliseWaveform(samples[m], numSamples);
+  }
+
   //now print all samples to serial port
   for (int i = 0; i < numSamples; i++){
     for (int m = 0; m < numMics; m++){
@@ -51,15 +64,47 @@ void loop() {
     Serial.println("");
   }
   
-  Serial.print("Done sampling in ");
-  Serial.print(millis() - beginTime);
-  Serial.println("ms.");
+  Serial.print("Power of each waveform: num");
+  Serial.print(p1); Serial.print("\t num");
+  Serial.println(p2);
+  
   Serial.println("Waiting for 1 seconds");
   delay(1000);  
 }
 
+//takes a previously centralised waveform
+//and divides each sample by the total power of the waveform
 void normaliseWaveform(float *waveform, int wsize){
-  
+  float wpower = calcPower(waveform, wsize);
+  float factor = sqrt(wpower) / wsize ;
+  for (int i = 0; i < wsize; i++){
+    waveform[i] /= factor;
+  }
+}
+
+//calculates power of waveform
+float calcPower(float *waveform, int wsize){
+  float result = 0;
+  for (int i = 0; i < wsize; i++){
+    result += sq(waveform[i]);
+  }
+  result /= wsize;
+  return result;
+}
+
+//removes dc component of waveform
+void centerWaveform(float *waveform, int wsize){
+  float average = 0;
+  //calculate mean
+  for (int i = 0; i < wsize; i++){
+    average += waveform[i];
+  }
+  average /= wsize;
+
+  //subtract mean from each value in waveform[]
+  for (int i = 0; i < wsize; i++){
+    waveform[i] -= average;
+  }
 }
 
 //record samples into samples[2][numSamples]
