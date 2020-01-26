@@ -3,7 +3,7 @@
 const int inputs[] = {A0, A1};
 const int numInputs = sizeof(inputs) / sizeof(int);
 
-const int ANALOG_READ_RESOLUTION = 10;
+const int ANALOG_READ_RESOLUTION = 12;
 const int ANALOG_READ_AVERAGING = 1;
 
 const int numSamples = 400;

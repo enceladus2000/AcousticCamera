@@ -17,7 +17,7 @@ float samples[numMics][numSamples]; //stores 2 waveforms
 
 const int ANALOG_READ_RESOLUTION = 10;
 const int ANALOG_READ_AVERAGING = 1;
-const int fs = 10000;    //sampling frequency
+const int fs = 60000;    //sampling frequency
 
 //to properly resolve one cycle of a waveform of frequency f, 
 // numsamples >= fs / f or f >= fs / numSamples should be true
@@ -38,9 +38,6 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Beginning sampling...");
-  //record start time of sample taking
-  long beginTime = millis();
   samplingBegin();
   //wait for sampling to complete
   while (sampleCounter < numSamples);     //waiting for sampling to finish
@@ -75,8 +72,7 @@ void loop() {
 //takes a previously centralised waveform
 //and divides each sample by the total power of the waveform
 void normaliseWaveform(float *waveform, int wsize){
-  float wpower = calcPower(waveform, wsize);
-  float factor = sqrt(wpower) / wsize ;
+  float factor = sqrt(calcPower(waveform, wsize));
   for (int i = 0; i < wsize; i++){
     waveform[i] /= factor;
   }

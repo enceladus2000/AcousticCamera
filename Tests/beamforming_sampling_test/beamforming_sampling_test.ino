@@ -1,6 +1,8 @@
 /* Records samples into samples[2][numSamples]
  * And sends the recorded waveforms on serial
  * So that the serial plotter can plot them on one graph 
+ * teensy 3.6 can reach 200+kHz with two mics at 10bit res
+ * and 150+khz at 12bit res
  */
 
 const int micPins[] = {A0, A1};
@@ -13,7 +15,7 @@ float samples[numMics][numSamples]; //stores 2 waveforms
 
 const int ANALOG_READ_RESOLUTION = 10;
 const int ANALOG_READ_AVERAGING = 1;
-const int fs = 10000;    //sampling frequency
+const int fs = 50000;    //sampling frequency
 
 //to properly resolve one cycle of a waveform of frequency f, 
 // numsamples >= fs / f or f >= fs / numSamples should be true
@@ -48,7 +50,8 @@ void loop() {
       Serial.print('\t');
     }
     Serial.println("");
-    delay(10);
+    //delay for python program?
+    //delay(10);
   }
   
 //  Serial.print("Done sampling in ");
