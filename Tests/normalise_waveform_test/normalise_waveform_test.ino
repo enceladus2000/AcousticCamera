@@ -24,11 +24,7 @@ const int fs = 60000;    //sampling frequency
 
 void setup() {
   Serial.begin(115200);
-  //to (hopefully) ensure that the serial plotter plots two graphs
-  for (int i = 0; i < 50; i++){
-    Serial.println("100\t100"); 
-    delay(15);
-  }
+ 
 
   for (int i = 0; i < numMics; i++)
     pinMode(micPins[i], INPUT);
@@ -61,11 +57,11 @@ void loop() {
     Serial.println("");
   }
   
-  Serial.print("Power of each waveform: num");
-  Serial.print(p1); Serial.print("\t num");
-  Serial.println(p2);
-  
-  Serial.println("Waiting for 1 seconds");
+//  Serial.print("Power of each waveform: num");
+//  Serial.print(p1); Serial.print("\t num");
+//  Serial.println(p2);
+//  
+//  Serial.println("Waiting for 1 seconds");
   delay(1000);  
 }
 
