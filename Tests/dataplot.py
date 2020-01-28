@@ -1,3 +1,9 @@
+'''
+Simple program to plot two columns of float values coming from
+the serial port and plot it on two graphs. Non numeric values
+are printed on the serial port
+'''
+
 import numpy as np
 import matplotlib.pyplot as plt 
 import serial
@@ -56,18 +62,6 @@ while True:
 		plt.draw()
 		plt.pause(0.001)
 
-
-	# parse floats from strn to data[0][counter] and data[1][counter] 
-	# if not a valid float:
-	# 	print data to command numLine
-	# else:
-	# 	counter++
-
-	# if counter >= numLines:
-	# 	counter = 0;
-	# 	plt.clear()
-	# 	plt.plot(xaxis, data[0])
-	# 	plt.plot(xaxis, data[1])
 
 print("Closing port...")
 port.close()
