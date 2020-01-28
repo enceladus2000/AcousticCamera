@@ -6,7 +6,7 @@ from time import sleep
 import matplotlib.animation as animation
 
 try:
-	ser=serial.Serial('/dev/ttyACM0', baudrate=115200,timeout=1)
+	ser=serial.Serial('COM7', baudrate=115200,timeout=1)
 except:
 	print("port not found")
 time.sleep(2)
@@ -68,22 +68,3 @@ plt.plot(c,s2 )
 plt.ylabel("sensor values")
 plt.suptitle("values of both the sensors")
 plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> 42d8015d37bcf41f4ffcff8457934318ef260dc2
