@@ -10,12 +10,12 @@ const int numMics = sizeof(micPins) / sizeof(int);    //at least in this sketch,
 const int numPoints = 21;       //number of points in scan area, should be an odd number
 //all distances in meters
 const float pointStep = 0.10;       //distance between consecutive scan points
-const float scanDist = 1.00;       //distance of scanning area from mics
+const float scanDist = 0.90;       //distance of scanning area from mics
 const float micDist = 0.29;          //distance between two mics
 //angle subtended by scan area = 2 * atan((numPoints/2)*pointStep / scanDist)
 float scanArea[numPoints];          //stores results of beamforming
 
-const int fs = 10000;      //sampling freq
+const int fs = 30000;      //sampling freq
 const int c = 343;        //speed of sound (m/s)
 
 //Delays should be (and are from testing) symmetrical 
