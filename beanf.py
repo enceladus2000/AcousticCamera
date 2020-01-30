@@ -22,7 +22,7 @@ import time
 import sys
 import seaborn as sns
 
-comport = "/dev/ttyACM0"
+comport = "/dev/ttyACM1"
 
 #helper functions
 def beginBFImageCollect():
@@ -38,27 +38,16 @@ def endBFImageCollect(plotredraw = True):
 	bfi_collect = False
 	if plotredraw:
 		plotBFI()
-		heatmap()
 def plotBFI():
-	print(bfidata)
+	
 	axs[1].cla()
 	axs[1].plot(bfidata)
 	plt.draw()
 	plt.pause(0.001)
 def heatmap():
-	plt.cla()
-	plt.rcParams["figure.figsize"] = 5,2
-	y=np.array(bfidata)
-	if(len(bfidata)>0):
-		x = np.linspace(0,1,len(bfidata))
-		print(len(x))
-		print(len(y))
-		extent = [x[0]-(x[1]-x[0])/2., x[-1]+(x[1]-x[0])/2.,0,1]
-		axs[2].imshow(y[np.newaxis,:], cmap="plasma", aspect="auto", extent=extent)
-		axs[2].set_yticks([])
-		axs[2].set_xlim(extent[0], extent[1])
-		plt.tight_layout()
-		plt.draw()
+	axs[2].cla()
+	for i in range(len(graph1)):
+		ax.imshow(graph1[i])
 		plt.pause(0.001)
 def updateWaveformPlot():
 	axs[0].cla()
@@ -84,6 +73,7 @@ def endWaveformCollect(plotredraw = True):
 	waveform_collect = False
 	if plotredraw:
 		updateWaveformPlot()
+
 #main code
 try:
 	port = serial.Serial(comport, baudrate=115200, timeout=1)
@@ -106,6 +96,7 @@ graph2 = []
 graph_counter = 0
 graph_maxcount = 600
 waveform_collect = False
+
 bfi_counter = 0
 bfi_maxcount = 100
 bfidata = []
