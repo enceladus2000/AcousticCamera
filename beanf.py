@@ -22,7 +22,7 @@ import time
 import sys
 import seaborn as sns
 
-comport = "/dev/ttyACM1"
+comport = "COM7"
 
 #helper functions
 def beginBFImageCollect():
@@ -38,17 +38,29 @@ def endBFImageCollect(plotredraw = True):
 	bfi_collect = False
 	if plotredraw:
 		plotBFI()
-def plotBFI():
-	
+		heatmap()
+
+def plotBFI():	
 	axs[1].cla()
 	axs[1].plot(bfidata)
 	plt.draw()
 	plt.pause(0.001)
+
 def heatmap():
-	axs[2].cla()
-	for i in range(len(graph1)):
-		ax.imshow(graph1[i])
+	plt.cla()
+	plt.rcParams["figure.figsize"] = 5,2
+	y=np.array(bfidata)
+	if(len(bfidata)>0):
+		x = np.linspace(0,1,len(bfidata))
+
+		extent = [x[0]-(x[1]-x[0])/2., x[-1]+(x[1]-x[0])/2.,0,1]
+		axs[2].imshow(y[np.newaxis,:], cmap="plasma", aspect="auto", extent=extent)
+		axs[2].set_yticks([])
+		axs[2].set_xlim(extent[0], extent[1])
+		plt.tight_layout()
+		plt.draw()
 		plt.pause(0.001)
+
 def updateWaveformPlot():
 	axs[0].cla()
 	axs[0].plot(graph1, '-b')
@@ -94,7 +106,7 @@ fig, axs = plt.subplots(3)
 graph1 = []
 graph2 = []
 graph_counter = 0
-graph_maxcount = 600
+graph_maxcount = 700
 waveform_collect = False
 
 bfi_counter = 0
@@ -143,17 +155,19 @@ while True:
 				print("Error recognizing header " + data_tag)
 
 	#now check if data is non-numeric and directly print that to cmd
-	elif line[0].isdigit() == False:
-		print(line)
+	elif line[0].isdigit() == False and not (line[0] == '-' and line[1].isdigit()):
+		print(":=>" + line)
 	#collect waveform data
 	elif waveform_collect == True:
 		values = line.split('\t')
 		if len(values) == 2:
 			#print(values)
 			#append data into lists
-			graph1.append(float(values[0]))
-			graph2.append(float(values[1]))
-
+			try:
+				graph1.append(float(values[0]))
+				graph2.append(float(values[1]))
+			except:
+				print("Error converting waveform to floats...")
 			graph_counter += 1
 			if graph_counter >= graph_maxcount:
 				print("Waveform max count reached, resetting...")
