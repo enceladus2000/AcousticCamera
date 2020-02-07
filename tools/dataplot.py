@@ -2,6 +2,9 @@
 Simple program to plot two columns of float values coming from
 the serial port and plot it on two graphs. Non numeric values
 are printed on the serial port
+
+The end goal is to be a more powerful and customized alternative
+to the arduino IDE's serial monitor
 '''
 
 import numpy as np
