@@ -14,3 +14,17 @@ class Source:
 	def __init__(self, position, freq):
 		self.position = position
 		self.freq = freq
+
+# initialise two mic objects in a linear array
+
+# init a source somewhere in front of the mics
+
+# generate the mic's output waveform (Mic.generateWaveform())
+
+# plot them
+
+# add all mics' waveforms together and get resultant power
+
+# repeat these steps for different source positions
+
+# and plot a graph of the resultant power for each position
