@@ -3,16 +3,30 @@ import matplotlib.pyplot as plt
 
 c = 340		# speed of sound in m/s
 
-# simple sine wave omnidirectional source
+# source class
+	# list (not tuple, or singleton Sources) of Sources.
+	# position - tuple, because not much 
+	# frequency
+	# __repr__
+# mic class - includes sound sampling
+	# position
+	# generate waveform
+	# waveform - numpy.array is better for a ton of calcs
+	# __repr__ 
+
+# v simple sine wave omnidirectional non-attenuating source
 class Source:
 	def __init__(self, position, freq):
 		self.position = position
 		self.freq = freq
 
-# omnidirectional mic class, limited to 2 dimension for now 
+	def __repr__(self):
+		return 'Source: pos = {p}, freq = {f}'.format(p=self.position, f=self.freq)
+
+# omnidirectional mic class
 class Mic:
 	numSamples = 100		
-	samplingRate = 1000	# sampling freq in Hz
+	samplingRate = 1000		# sampling freq in Hz
 
 	# position must be a tuple of length 2
 	def __init__(self, position):
