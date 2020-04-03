@@ -4,17 +4,6 @@ from matplotlib.ticker import StrMethodFormatter
 
 c = 340		# speed of sound in m/s
 
-# source class
-	# list (not tuple, or singleton Sources) of Sources.
-	# position - tuple, because not much 
-	# frequency
-	# __repr__
-# mic class - includes sound sampling
-	# position
-	# generate waveform
-	# waveform - numpy.array is better for a ton of calcs
-	# __repr__ 
-
 # v simple sine wave omnidirectional non-attenuating source
 class Source:
 	def __init__(self, position, freq):
@@ -42,55 +31,86 @@ class Mic:
 
 	#func to generate wavefrom for different mics
 	def generateWaveform(self, src):
-		# calculate distance between mic and source
-		dist = np.array(src.position) - np.array(self.position)
-		dist = np.sqrt(dist.dot(dist))
 		# calc phase difference
-		phasediff = 2 * np.pi * src.freq * dist / c
-
-		print(str(self), ': phasediff =', phasediff)
+		phasediff = 2 * np.pi * src.freq * pointDist(src.position, self.position) / c
 
 		# waveform will be sin(2(pi)vt + phi) 
 		# where v is src.freq, t is the t_range
 		t_range = np.linspace(0, self.numSamples / self.samplingRate, self.numSamples)
-		self.waveform = np.sin(2*np.pi*src.freq*t_range - phasediff)
+		self.waveform = np.sin(2*np.pi*src.freq*t_range - phasediff)	
+
+# calculates abs distance btw two points represented as 2-tuples
+def pointDist(p1, p2):
+	dist = np.array(p1) - np.array(p2)
+	dist = np.sqrt(dist.dot(dist))
+
+	return dist
+
+# calculates rms squared of waveform
+def calcPower(waveform):
+	return np.average(np.square(waveform))
+
+# scanArea paramters
+scanDistance = 50.0
+numScanPoints = 31
+scanLength = 50.0 
+scanArea = [(x, scanDistance) for x in np.linspace(-scanLength/2, scanLength/2, numScanPoints)]
+print('Scan Area: ', scanArea)
 
 # initialise two mic objects in a linear arrangement on x axis
-mic1 = Mic((-2.0, 0.0))
-mic2 = Mic((2.0, 0.0))
+mic1 = Mic((-0.2, 0.0))
+mic2 = Mic((0.2, 0.0))
 
 # init a source somewhere in front of the mics
-src = Source((2.0, 2.0), 100.0)
+src = Source((-3.0, 5.5), 100.0)
 
 # generate the mic's output waveform 
 mic1.generateWaveform(src)
 mic2.generateWaveform(src)
 
+bfImage = []
+# calculated phasediffs for each point - seems about right
+phaseDiffs = []
+for point in scanArea:
+	# calculate delays
+	d1 = pointDist(point, mic1.position) / c * mic1.samplingRate
+	d2 = pointDist(point, mic2.position) / c * mic2.samplingRate
+	phaseDiffs.append(360 * src.freq * (d1 - d2) / mic1.samplingRate )
+
+	# 'zero' them
+	min_d = min(d1, d2)
+	d1 = int(round(d1 - min_d))
+	d2 = int(round(d2 - min_d))
+	print('rounded delays', (d1, d2))
+
+	dnsSignal = mic1.waveform[d1:mic1.numSamples-d2] + mic2.waveform[d2:mic2.numSamples-d1]
+	bfImage.append(calcPower(dnsSignal))
+
+print('PhaseDiffs:', phaseDiffs)
 # create x axis range
 t_range = np.linspace(0, mic1.numSamples / mic1.samplingRate, mic1.numSamples)
 
 # plot the generated waveforms
-fig, axs = plt.subplots(1)
-axs.plot(t_range, mic1.waveform, color='blue', label='mic1')
-axs.plot(t_range, mic2.waveform, color='red', label='mic2')
+fig, axs = plt.subplots(2)
 
-axs.grid(True)
+# plot raw mic waveforms in first subplot
+axs[0].plot(t_range, mic1.waveform, color='blue', label='mic1')
+axs[0].plot(t_range, mic2.waveform, color='red', label='mic2')
 
-axs.spines['left'].set_position('zero')
-axs.spines['bottom'].set_position('center')
-axs.spines['right'].set_color('none')
-axs.spines['top'].set_color('none')
+axs[0].grid(True)
 
-axs.xaxis.set_major_formatter(StrMethodFormatter('{x:,.2f}'))
-axs.set_xticks(np.linspace(0, max(t_range), 4))
-axs.set_yticks(np.linspace(*axs.get_ylim(), 5), 2)
+axs[0].spines['left'].set_position('zero')
+axs[0].spines['bottom'].set_position('center')
+axs[0].spines['right'].set_color('none')
+axs[0].spines['top'].set_color('none')
 
+axs[0].xaxis.set_major_formatter(StrMethodFormatter('{x:,.3f}'))
+axs[0].set_xticks(np.linspace(0, max(t_range), 4))
+axs[0].set_yticks(np.linspace(*axs[0].get_ylim(), 5), 2)
 
-axs.legend(loc='upper right')
+axs[0].legend(loc='upper right')
+
+# plot bfImage in 2nd subplot
+axs[1].plot(bfImage)
+
 plt.show()
-
-# add all mics' waveforms together and get resultant power
-
-# repeat these steps for different source positions
-
-# and plot a graph of the resultant power for each position'''
