@@ -19,7 +19,7 @@ class Mic:
 	# position must be a tuple of length 2
 	def __init__(self, position):
 		self.position = position
-		self.waveform = np.zeros(self.numSamples, dtype='float32')
+		self.waveform = np.zeros(micSampleSize, dtype='float32')
 		# t_range useful for generating waveform and plotting
 		#self.t_range = np.linspace(0, self.numSamples / self.samplingRate, self.numSamples)
 
@@ -34,7 +34,7 @@ class Mic:
 
 		# waveform will be sin(2(pi)vt + phi) 
 		# where v is src.freq, t is the t_range
-		t_range = np.linspace(0, self.numSamples / self.samplingRate, self.numSamples)
+		t_range = np.linspace(0, micSampleSize / micSamplingRate, micSampleSize)
 		self.waveform = np.sin(2*np.pi*src.freq*t_range - phasediff)	
 
 # calculates abs distance btw two points represented as 2-tuples

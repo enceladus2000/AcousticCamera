@@ -2,7 +2,7 @@
 
 1. Make sure you have matplotlib and numpy installed.
 2. Enter this directory.
-2. On command line, run using `python main.py`.
+3. On command line, run using `python main.py`.
 
 # Code explanation
 
@@ -10,7 +10,7 @@ This is a simulation program to test out implementations of a microphone-array a
 
 The main.py should consist of the following parts:
 
-1. Creating a scanArea, i.e a set of points (in 2D plane) that the algorithm will scan and output as an image.
+1. Creating a `scanArea[]`, i.e a set of points (in 2D plane) that the algorithm will scan and output as an image.
 2. Definition of `mics`: A list of `Mic` objects.
 3. Initialising a `Source` object.
 4. Calling the `Mic.generateWaveform()` function for each mic in `mics`.

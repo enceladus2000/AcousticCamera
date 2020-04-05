@@ -3,6 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import StrMethodFormatter
 
+# scanArea parameters
+# describes a linear region in front of the mics
+scanDistance = 50.0
+numScanPoints = 31
+scanLength = 50.0 
+scanArea = [(x, scanDistance) for x in np.linspace(-scanLength/2, scanLength/2, numScanPoints)]
+
 # init mic array
 mics = []
 numMics = 2
