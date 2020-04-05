@@ -5,7 +5,7 @@ c = 340		# speed of sound in m/s
 micSamplingRate = 5000
 micSampleSize = 100
 
-# v simple sine wave omnidirectional non-attenuating source
+# simple sine wave source (non attenuating)
 class Source:
 	def __init__(self, position, freq):
 		self.position = position
@@ -14,11 +14,8 @@ class Source:
 	def __repr__(self):
 		return 'Source: pos = {p}, freq = {f}'.format(p=self.position, f=self.freq)
 
-# omnidirectional mic class
+# simple omnidirectional mic
 class Mic:
-	numSamples = 100		
-	samplingRate = 5000		# sampling freq in Hz
-
 	# position must be a tuple of length 2
 	def __init__(self, position):
 		self.position = position

@@ -3,34 +3,33 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import StrMethodFormatter
 
-# scanArea paramters
-scanDistance = 50.0
-numScanPoints = 31
-scanLength = 50.0 
-scanArea = [(x, scanDistance) for x in np.linspace(-scanLength/2, scanLength/2, numScanPoints)]
-print('Scan Area: ', scanArea)
-
 # init mic array
 mics = []
 numMics = 2
 
+# init two mics at (-.2, 0) and (.2, 0)
 for x in np.linspace(-0.2, 0.2, numMics):
 	mics.append(acsim.Mic((x, 0)))
 
-for mic in mics:
-	print(mic)
-
-# init a source somewhere in front of the mics
+# init a sound source of 100Hz
 src = acsim.Source((20, scanDistance), 100.0)
 
 # generate the mics' output waveform 
 for mic in mics:
 	mic.generateWaveform(src)
 
+# scanArea parameters
+# describes a linear region in front of the mics
+scanDistance = 50.0
+numScanPoints = 31
+scanLength = 50.0 
+scanArea = [(x, scanDistance) for x in np.linspace(-scanLength/2, scanLength/2, numScanPoints)]
+
 bfImage = []		# contains beamformed acoustic 'image'
 phaseDiffs = []		# calculated phasediffs for each point - seems about right
 
-# calculate intensity of each point in scanArea and append to bfImage
+# simple delay and sum algorithm that calculates the
+# sound intensity of each point in scanArea
 for point in scanArea:
 	# calculate delays
 	delays = []
@@ -44,11 +43,12 @@ for point in scanArea:
 
 	# round delays[] to an int array
 	delays = np.round(delays).astype(int)
-	print('delays at point', point, ' is:', delays)
+	# print('delays at point', point, ' is:', delays)
 
 	newSampleSize = acsim.micSampleSize - max(delays)
 	dnsSignal = np.zeros(newSampleSize)
 
+	# add up shifted waveforms from each mic
 	# how to get iterator?
 	for i in range(numMics):
 		dnsSignal += mics[i].waveform[ delays[i] : delays[i]+newSampleSize ]
