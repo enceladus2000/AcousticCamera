@@ -5,13 +5,15 @@
 
 # Code explanation
 
-If all you're interested is simulations, you can largely ignore the `acousticsim.py` module. The relevant stuff is in `main.py`.
+This is an simulation program to test out implementations of acoustic cameras consisting of multiple microphones.
+
+If you're only interested is simulations, you can largely ignore the `acousticsim.py` module. The relevant stuff is in `main.py`.
 
 The main.py should consist of the following parts:
 
 1. Initialising `mics` array.
 2. Initialising a `Source` object.
-3. Calling the Mic.generateWaveform() function for each mic instance.
+3. Calling the `Mic.generateWaveform()` function for each mic instance.
 4. Creating a scanArea, i.e a set of points (in 2D plane) that the algorithm will scan and output as an image.
 5. The beamforming algorithm, which stores the acoustic 'image' in `bfImage[]`.
 6. Data plotting - both raw waveforms and the `bfImage[]`.
