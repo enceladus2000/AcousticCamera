@@ -37,6 +37,24 @@ class Mic:
 		t_range = np.linspace(0, micSampleSize / micSamplingRate, micSampleSize)
 		self.waveform = np.sin(2*np.pi*src.freq*t_range - phasediff)	
 
+def MicArray:
+	samplingRate = 5000		# in Hz
+	sampleSize = 100
+
+	# initialise a uniform linear array of mics
+	def __init__(self, length, numMics):
+		mics = []
+		arraySize = numMics
+
+		for x in np.linspace(-length/2, length/2, arraySize):
+			mics.append(Mic((x, 0)))
+
+	def generateWaveforms(self):
+		for mic in mics:
+			mic.generateWaveform()
+
+
+
 # calculates abs distance btw two points represented as 2-tuples
 def pointDist(p1, p2):
 	dist = np.array(p1) - np.array(p2)

@@ -11,6 +11,8 @@ scanLength = 50.0
 scanArea = [(x, scanDistance) for x in np.linspace(-scanLength/2, scanLength/2, numScanPoints)]
 
 # init mic array
+micarray = acsim.MicArray(0.4, 2)
+# micarray branch
 mics = []
 numMics = 2
 
