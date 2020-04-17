@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import StrMethodFormatter
 
+showHeatmap = False
+
 # scanArea parameters
 # describes a linear region in front of the mics
 scanDistance = 50.0
@@ -75,17 +77,21 @@ axs[0].xaxis.set_major_formatter(StrMethodFormatter('{x:,.3f}'))
 axs[0].set_xticks(np.linspace(0, max(t_range), 4))
 axs[0].set_yticks(np.linspace(*axs[0].get_ylim(), 5), 2)
 
-# axs[0].legend(loc='upper right')
 # plot bfImage in 2nd subplot
 axs[1].plot(bfImage)
-plt.draw()
-plt.rcParams["figure.figsize"] = 5,2
-y=np.array(bfImage)
-if(len(bfImage)>0):
-	x = np.linspace(0,1,len(bfImage))
-	extent = [x[0]-(x[1]-x[0])/2., x[-1]+(x[1]-x[0])/2.,0,1]
+
+# plot bfImage as a heatmap
+# plt.rcParams["figure.figsize"] = 5,2
+if showHeatmap is True:
+	x = np.linspace(0, 1, len(bfImage))
+	y = np.array(bfImage)
+	extent = [(x[0]-(x[1]-x[0])/2), (x[-1]+(x[1]-x[0])/2), 0, 1]
+
 	axs[2].imshow(y[np.newaxis,:], cmap="plasma", aspect="auto", extent=extent)
-	axs[2].set_yticks([])
+	axs[2].set_yticks([])	# no y ticks
 	axs[2].set_xlim(extent[0], extent[1])
 	plt.tight_layout()
+else:
+	# axs[2].set_axis_off()
+
 plt.show()
