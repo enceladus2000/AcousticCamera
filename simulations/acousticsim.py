@@ -37,21 +37,37 @@ class Mic:
 		t_range = np.linspace(0, micSampleSize / micSamplingRate, micSampleSize)
 		self.waveform = np.sin(2*np.pi*src.freq*t_range - phasediff)	
 
-def MicArray:
+class MicArray:
 	samplingRate = 5000		# in Hz
 	sampleSize = 100
 
 	# initialise a uniform linear array of mics
 	def __init__(self, length, numMics):
-		mics = []
-		arraySize = numMics
+		self.mics = []
+		self.arraySize = numMics
 
-		for x in np.linspace(-length/2, length/2, arraySize):
-			mics.append(Mic((x, 0)))
+		for x in np.linspace(-length/2, length/2, self.arraySize):
+			self.mics.append(Mic((x, 0)))
 
-	def generateWaveforms(self):
-		for mic in mics:
-			mic.generateWaveform()
+	# iterable, must be able to be iterated, eg: for mic in micarray
+	def __iter__(self):
+		self.i = 0
+		return self
+
+	def __next__(self):
+		if self.i < self.arraySize:
+			temp_mic = self.mics[self.i]
+			self.i += 1
+			return temp_mic
+		else:
+			raise StopIteration
+	
+	def __getitem__(self, index):
+		return self.mics[index]
+
+	def generateWaveforms(self, src):
+		for mic in self.mics:
+			mic.generateWaveform(src)
 
 
 

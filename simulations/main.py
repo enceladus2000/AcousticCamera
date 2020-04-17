@@ -10,29 +10,18 @@ numScanPoints = 31
 scanLength = 50.0 
 scanArea = [(x, scanDistance) for x in np.linspace(-scanLength/2, scanLength/2, numScanPoints)]
 
-# init mic array
-micarray = acsim.MicArray(0.4, 2)
-# micarray branch
-mics = []
-numMics = 2
-
-# init two mics at (-.2, 0) and (.2, 0)
-for x in np.linspace(-0.2, 0.2, numMics):
-	mics.append(acsim.Mic((x, 0)))
-
 # init a sound source of 100Hz
 src = acsim.Source((20, scanDistance), 100.0)
 
-# generate the mics' output waveform 
-for mic in mics:
-	mic.generateWaveform(src)
+# init mic array
+micarray = acsim.MicArray(0.4, 2)
 
-# scanArea parameters
-# describes a linear region in front of the mics
-scanDistance = 50.0
-numScanPoints = 31
-scanLength = 50.0 
-scanArea = [(x, scanDistance) for x in np.linspace(-scanLength/2, scanLength/2, numScanPoints)]
+print('Mic array test: ')
+for mic in micarray:
+	print(mic)
+	
+# generate waveforms for each mic
+micarray.generateWaveforms(src)
 
 bfImage = []		# contains beamformed acoustic 'image'
 phaseDiffs = []		# calculated phasediffs for each point - seems about right
@@ -42,8 +31,8 @@ phaseDiffs = []		# calculated phasediffs for each point - seems about right
 for point in scanArea:
 	# calculate delays
 	delays = []
-	for mic in mics:
-		delay = acsim.pointDist(point, mic.position) / acsim.c * acsim.micSamplingRate
+	for mic in micarray:
+		delay = acsim.pointDist(point, mic.position) / acsim.c * micarray.samplingRate 
 		delays.append(delay)
 
 	# 'zero' them
@@ -54,24 +43,24 @@ for point in scanArea:
 	delays = np.round(delays).astype(int)
 	# print('delays at point', point, ' is:', delays)
 
-	newSampleSize = acsim.micSampleSize - max(delays)
+	newSampleSize = micarray.sampleSize - max(delays)
 	dnsSignal = np.zeros(newSampleSize)
 
 	# add up shifted waveforms from each mic
 	# how to get iterator?
-	for i in range(numMics):
-		dnsSignal += mics[i].waveform[ delays[i] : delays[i]+newSampleSize ]
+	for i in range(micarray.arraySize):
+		dnsSignal += micarray[i].waveform[ delays[i] : delays[i]+newSampleSize ]
 
 	bfImage.append(acsim.calcPower(dnsSignal))
 
 # create x axis range
-t_range = np.linspace(0, acsim.micSampleSize / acsim.micSamplingRate, acsim.micSampleSize)
+t_range = np.linspace(0, micarray.sampleSize /micarray.samplingRate, micarray.sampleSize)
 
 # plot the generated waveforms
 fig, axs = plt.subplots(2)
 
 # plot raw mic waveforms in first subplot
-for mic in mics:
+for mic in micarray:
 	axs[0].plot(t_range, mic.waveform)
 
 axs[0].grid(True)
