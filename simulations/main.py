@@ -14,12 +14,12 @@ scanArea = [(x, scanDistance) for x in np.linspace(-scanLength/2, scanLength/2, 
 src = acsim.Source((20, scanDistance), 100.0)
 
 # init mic array
-micarray = acsim.MicArray(0.4, 2)
+micarray = acsim.MicArray(1.0, 2)
 
 print('Mic array test: ')
 for mic in micarray:
 	print(mic)
-	
+
 # generate waveforms for each mic
 micarray.generateWaveforms(src)
 
