@@ -3,24 +3,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import StrMethodFormatter
 
-showHeatmap = False
+showHeatmap = True
 
-# scanArea parameters
-# describes a linear region in front of the mics
-scanDistance = 50.0
-numScanPoints = 31
-scanLength = 50.0 
-scanArea = [(x, scanDistance) for x in np.linspace(-scanLength/2, scanLength/2, numScanPoints)]
+# initialise a linear 'scan area' that is
+# distance away from origin, centered on y axis and parallel to x axis
+scanArea = acsim.ScanArea(distance=50.0, length=50.0, numPoints=31)
 
 # init a sound source of 100Hz
-src = acsim.Source((20, scanDistance), 100.0)
+src = acsim.Source((20, scanArea.distance), 100.0)
 
 # init mic array
 micarray = acsim.MicArray(1.0, 2)
-
-print('Mic array test: ')
-for mic in micarray:
-	print(mic)
 
 # generate waveforms for each mic
 micarray.generateWaveforms(src)
@@ -92,6 +85,6 @@ if showHeatmap is True:
 	axs[2].set_xlim(extent[0], extent[1])
 	plt.tight_layout()
 else:
-	# axs[2].set_axis_off()
+	axs[2].set_axis_off()
 
 plt.show()

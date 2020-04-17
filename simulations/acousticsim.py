@@ -31,6 +31,7 @@ class Mic:
 		t_range = np.linspace(0, sampleSize / samplingRate, sampleSize)
 		self.waveform = np.sin(2*np.pi*src.freq*t_range - phasediff)
 
+# class containing array of Mic[]
 class MicArray:
 	samplingRate = 10000		# in Hz
 	sampleSize = 100
@@ -67,6 +68,31 @@ class MicArray:
 		for mic in self.mics:
 			mic.generateWaveform(src, self.samplingRate, self.sampleSize)
 
+class ScanArea:
+	# make linear scan area at scanDistance from origin
+	# centered on y axis, parallel to x axis
+	def __init__(self, distance, length, numPoints):
+		self.distance = distance
+		self.length = length
+		self.numPoints = numPoints
+		self.scanArea = [(x, distance) for x in np.linspace(-length/2, length/2, numPoints)]
+
+
+	# configure as iterable object
+	def __getitem__(self, index):
+		return self.scanArea[index]
+
+	def __iter__(self):
+		self.point_i = 0
+		return self
+
+	def __next__(self):
+		if self.point_i < self.numPoints:
+			point = self.scanArea[self.point_i]
+			self.point_i += 1
+			return point
+		else:
+			raise StopIteration
 
 # calculates abs distance btw two points represented as tuples
 # works for 2D and 3D coordinates
