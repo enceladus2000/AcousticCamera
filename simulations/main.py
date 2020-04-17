@@ -57,11 +57,12 @@ for point in scanArea:
 t_range = np.linspace(0, micarray.sampleSize /micarray.samplingRate, micarray.sampleSize)
 
 # plot the generated waveforms
-fig, axs = plt.subplots(2)
-
+fig, axs = plt.subplots(3)
 # plot raw mic waveforms in first subplot
 for mic in micarray:
 	axs[0].plot(t_range, mic.waveform)
+	plt.draw()
+	plt.pause(0.001)
 
 axs[0].grid(True)
 
@@ -75,8 +76,16 @@ axs[0].set_xticks(np.linspace(0, max(t_range), 4))
 axs[0].set_yticks(np.linspace(*axs[0].get_ylim(), 5), 2)
 
 # axs[0].legend(loc='upper right')
-
 # plot bfImage in 2nd subplot
 axs[1].plot(bfImage)
-
+plt.draw()
+plt.rcParams["figure.figsize"] = 5,2
+y=np.array(bfImage)
+if(len(bfImage)>0):
+	x = np.linspace(0,1,len(bfImage))
+	extent = [x[0]-(x[1]-x[0])/2., x[-1]+(x[1]-x[0])/2.,0,1]
+	axs[2].imshow(y[np.newaxis,:], cmap="plasma", aspect="auto", extent=extent)
+	axs[2].set_yticks([])
+	axs[2].set_xlim(extent[0], extent[1])
+	plt.tight_layout()
 plt.show()
