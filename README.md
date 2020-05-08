@@ -6,6 +6,8 @@ An acoustic camera is just like a regular optical camera, but is used to capture
 
 The acoustic camera consists of an array of mics. Sound from these mics are sampled and processed by a delay-and-sum beamforming algorithm. The result is a heatmap corresponding to intensities of sound from different points in space, thus resembling in a false colour image of 'sound'.
 
+To learn more about the working of the acoustic camera, check out [this](https://github.com/DangerousTim/AcousticCamera/blob/master/docs/readme.md) list of resources.
+
 ## File descriptions
 
 * [hardware/](https://github.com/DangerousTim/AcousticCamera/tree/master/hardware) consists of code for a Teensy 3.6 microcontroller, which was used in our first prototype.
