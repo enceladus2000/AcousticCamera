@@ -5,56 +5,63 @@ from matplotlib.ticker import StrMethodFormatter
 
 showHeatmap = True
 
+# simple delay and sum algorithm that calculates the
+# sound intensity of each point in scanArea	
+def DelayAndSum(micArray, source, scanArea):
+	bfImage = []		# contains beamformed acoustic 'image'
+
+	for point in scanArea:
+		# calculate delays
+		delays = []
+		for mic in micArray:
+			delay = acsim.pointDist(point, mic.position) / acsim.c * micArray.samplingRate 
+			delays.append(delay)
+
+		# 'zero' them
+		min_delay = min(delays)
+		delays = np.array(delays) - min_delay
+
+		# round delays[] to an int array
+		delays = np.round(delays).astype(int)
+		# print('delays at point', point, ' is:', delays)
+
+		newSampleSize = micArray.sampleSize - max(delays)
+		dnsSignal = np.zeros(newSampleSize)
+
+		# add up shifted waveforms from each mic
+		# how to get iterator?
+		for i in range(micArray.arraySize):
+			dnsSignal += micArray[i].waveform[ delays[i] : delays[i]+newSampleSize ]
+
+		bfImage.append(acsim.calcPower(dnsSignal))
+	
+	return bfImage
+
 # initialise a linear 'scan area' that is
 # distance away from origin, centered on y axis and parallel to x axis
 scanArea = acsim.ScanArea(distance=50.0, length=50.0, numPoints=31)
 
 # init a sound source of 100Hz
-src = acsim.Source((20, scanArea.distance), 100.0)
+src = acsim.Source((0, scanArea.distance), 100.0)
 
 # init mic array
-micarray = acsim.MicArray(1.0, 2)
+micArray = acsim.MicArray(1.0, 2)
 
 # generate waveforms for each mic
-micarray.generateWaveforms(src)
+micArray.generateWaveforms(src)
 
-bfImage = []		# contains beamformed acoustic 'image'
-phaseDiffs = []		# calculated phasediffs for each point - seems about right
+# calculate delayandsum beamforming on waveforms
+# and store acoustic 'image' in bfImage[]
+bfImage = DelayAndSum(micArray, src, scanArea)
 
-# simple delay and sum algorithm that calculates the
-# sound intensity of each point in scanArea
-for point in scanArea:
-	# calculate delays
-	delays = []
-	for mic in micarray:
-		delay = acsim.pointDist(point, mic.position) / acsim.c * micarray.samplingRate 
-		delays.append(delay)
-
-	# 'zero' them
-	min_delay = min(delays)
-	delays = np.array(delays) - min_delay
-
-	# round delays[] to an int array
-	delays = np.round(delays).astype(int)
-	# print('delays at point', point, ' is:', delays)
-
-	newSampleSize = micarray.sampleSize - max(delays)
-	dnsSignal = np.zeros(newSampleSize)
-
-	# add up shifted waveforms from each mic
-	# how to get iterator?
-	for i in range(micarray.arraySize):
-		dnsSignal += micarray[i].waveform[ delays[i] : delays[i]+newSampleSize ]
-
-	bfImage.append(acsim.calcPower(dnsSignal))
-
+# Data plotting code...enclose into function?
 # create x axis range
-t_range = np.linspace(0, micarray.sampleSize /micarray.samplingRate, micarray.sampleSize)
+t_range = np.linspace(0, micArray.sampleSize /micArray.samplingRate, micArray.sampleSize)
 
 # plot the generated waveforms
 fig, axs = plt.subplots(3)
 # plot raw mic waveforms in first subplot
-for mic in micarray:
+for mic in micArray:
 	axs[0].plot(t_range, mic.waveform)
 	plt.draw()
 	plt.pause(0.001)
