@@ -45,7 +45,7 @@ scanArea = acsim.ScanArea(distance=50.0, length=50.0, numPoints=31)
 src = acsim.Source((0, scanArea.distance), 100.0)
 
 # init mic array
-micArray = acsim.MicArray(1.0, 2)
+micArray = acsim.MicArray(10.0, 5)
 
 # generate waveforms for each mic
 micArray.generateWaveforms(src)
@@ -55,35 +55,30 @@ micArray.generateWaveforms(src)
 bfImage = DelayAndSum(micArray, src, scanArea)
 
 # Data plotting code...enclose into function?
-# create x axis range
-t_range = np.linspace(0, micArray.sampleSize /micArray.samplingRate, micArray.sampleSize)
-
 # plot the generated waveforms
 fig, axs = plt.subplots(3)
+fig.suptitle("Acoustic beamforming of a 1-D ScanArea parallel to the x-axis", fontsize="20", fontweight="20")
 # plot raw mic waveforms in first subplot
+t_range = np.linspace(0, micArray.sampleSize /micArray.samplingRate, micArray.sampleSize)
+
 for mic in micArray:
 	axs[0].plot(t_range, mic.waveform)
-	plt.draw()
-	plt.pause(0.001)
-
 axs[0].grid(True)
-
-axs[0].spines['left'].set_position('zero')
-axs[0].spines['bottom'].set_position('center')
-axs[0].spines['right'].set_color('none')
-axs[0].spines['top'].set_color('none')
-
-axs[0].xaxis.set_major_formatter(StrMethodFormatter('{x:,.3f}'))
-axs[0].set_xticks(np.linspace(0, max(t_range), 4))
-axs[0].set_yticks(np.linspace(*axs[0].get_ylim(), 5), 2)
+axs[0].set_xlabel("time")
+axs[0].set_ylabel("amplitude")
+axs[0].set_title("The raw waveforms recieved by each mic")
 
 # plot bfImage in 2nd subplot
-axs[1].plot(bfImage)
+axs[1].plot([x for (x,y) in scanArea],bfImage)
+axs[1].grid(True)
+axs[1].set_xlabel("x")
+axs[1].set_ylabel("Intensity")
+axs[1].set_title("Processed beamformed image")
 
 # plot bfImage as a heatmap
 # plt.rcParams["figure.figsize"] = 5,2
 if showHeatmap is True:
-	x = np.linspace(0, 1, len(bfImage))
+	x = [x for (x,y) in scanArea]
 	y = np.array(bfImage)
 	extent = [(x[0]-(x[1]-x[0])/2), (x[-1]+(x[1]-x[0])/2), 0, 1]
 
@@ -93,5 +88,8 @@ if showHeatmap is True:
 	plt.tight_layout()
 else:
 	axs[2].set_axis_off()
+axs[2].set_xlabel("x")
+axs[2].set_title("Heat map of the beamformed image")
 
+plt.subplots_adjust(top=0.9)
 plt.show()

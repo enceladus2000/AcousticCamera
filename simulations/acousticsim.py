@@ -34,7 +34,7 @@ class Mic:
 # class containing array of Mic[]
 class MicArray:
 	samplingRate = 10000		# in Hz
-	sampleSize = 100
+	sampleSize = 500
 
 	# initialise a uniform linear array of mics
 	def __init__(self, length, numMics):
