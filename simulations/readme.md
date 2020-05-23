@@ -8,7 +8,7 @@
 
 This is a simulation program to test out implementations of a microphone-array acoustic camera.
 
-<img src = "../docs/accoustic-sim-screenshot.png" width = 500>
+<img src = "../docs/accoustic-sim-screenshot.png">
 
 The first subplot shows the raw waveforms received by each mic. The second shows the processed beamformed image, which shows a rough spike corresponding to where the virtual sound source is. The third plot is the head map of the beamformed image.
 
