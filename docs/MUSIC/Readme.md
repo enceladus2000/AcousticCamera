@@ -4,7 +4,7 @@ The  basic  idea  of  DOA  estimation  by  MUSIC algorithm  is  that  the  narro
 The signal subspace is represented by Eigen Vectors corresponding to high power  Eigen Values and  noise  subspace  is  represented  by  Eigen  Vectors  corresponding  low  power  Eigen Values. 
 The signal subspace corresponds to array manifolds and thus the dot product of  array  manifold  matrix A(  )  and  noise  subspace  will  be  minimum(zero)  in  the direction of true DOA.
 
-For a introduction check out the following:
+For an introduction to MUSIC check out the following:
 
 https://www.ripublication.com/ijeer17/ijeerv9n4_09.pdf. </br>
 https://pdfs.semanticscholar.org/5ff7/806b44e60d41c21429e1ad2755d72bba41d7.pdf.
