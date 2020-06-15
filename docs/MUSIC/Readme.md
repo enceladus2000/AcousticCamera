@@ -9,6 +9,8 @@ For an introduction to MUSIC check out the following:
 https://www.ripublication.com/ijeer17/ijeerv9n4_09.pdf. </br>
 https://pdfs.semanticscholar.org/5ff7/806b44e60d41c21429e1ad2755d72bba41d7.pdf.
 
-### The above simulator has been used for 4 mic linear array and 2 sound sources the number of sound sources can be used provided the number of mic elements are always greater than the number of sound sources.
+### The above simulator has been made for 4 mic linear array configuration with 2 sound sources and gaussian noise, the number of sound sources can be increased provided the number of mic elements are always greater than the number of sound sources.
 
 <img src = "https://github.com/aadhar218/AcousticCamera/blob/master/docs/MUSIC/MUSIC.png" width = 500>
+
+The peak in the figure gives the direction of arrival.
